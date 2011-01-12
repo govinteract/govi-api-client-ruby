@@ -1,0 +1,35 @@
+The GovInteract API client library provides developers with a basic wrapper for consuming the GovInteract API.  
+
+The next version of the API will implement OAUTH for authenticating clients.
+
+
+SAMPLE USAGE
+-------------------------------------------------------------------------------------------------------------
+Before using the library, you'll need to configure some basic options for it.  You can acquire these values from your GovInteract account.
+
+class Application < Rails::Application
+    config.api_name_key = "client_name_key"
+    config.api_version	= "v1"
+    config.api_env	= :production
+    config.api_ssl	= false
+    config.api_format	= :xml
+
+    config.api = Api::Base.new({
+			 :api_version => config.api_version,
+                         :client_name_key => config.api_name_key,
+                         :env => config.api_env,
+                         :ssl => config.api_ssl,
+                         :format => config.api_format
+			})
+
+end
+
+Request data from the GovInteract API:
+
+def index
+    @press_releases = ClientSite::Application.config.api.get(Api::Resources::Content::PRESS_RELEASES,{},{})["press_releases"]
+end
+
+def show
+    @press_release = ClientSite::Application.config.api.get(Api::Resources::Content::PRESS_RELEASES,{:crypto_hash => params[:crypto_hash]})["press_releases"].first
+end
